@@ -26,8 +26,14 @@ export default function SelecionarFuncionarioModal({ onConfirmar, onCancelar }) 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={onCancelar}
+    >
+      <div
+        className="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3 className="text-lg font-semibold text-brown-darker">
           Quem vai preparar?
         </h3>
@@ -84,7 +90,7 @@ export default function SelecionarFuncionarioModal({ onConfirmar, onCancelar }) 
           <div className="mt-4 flex justify-end">
             <button
               onClick={onCancelar}
-              className="rounded-md px-4 py-2 text-sm text-brown-dark hover:bg-cream"
+              className="cursor-pointer rounded-md px-4 py-2 text-sm text-brown-dark hover:bg-cream"
             >
               Fechar
             </button>

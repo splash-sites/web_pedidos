@@ -1,0 +1,114 @@
+PASSO A PASSO - PAINEL CACAU SHOW
+
+Guia rapido de como usar o painel de recebimento de pedidos.
+
+
+ACESSANDO O PAINEL
+
+1. Acesse: [COLOCAR AQUI O LINK DO PAINEL]
+2. Faca login com:
+   - Email: [COLOCAR AQUI]
+   - Senha: [COLOCAR AQUI]
+3. Se ainda nao tiver conta, clique em "Primeira vez? Criar conta" na tela de login e preencha nome, email e senha.
+
+Depois de logar, voce cai direto na tela de Pedidos.
+
+
+1. PEDIDOS (TELA PRINCIPAL)
+
+E o painel do dia a dia - mostra os pedidos em 3 colunas:
+
+- Recebido: pedido acabou de chegar
+- Em preparo: ja esta sendo feito
+- Pronto: terminou, esperando ser entregue/retirado
+
+A tela atualiza sozinha (indicador verde "Atualiza automaticamente" no canto superior direito) - nao precisa recarregar a pagina.
+
+Cada card de pedido mostra:
+- Mesa (ou nome do cliente, se for delivery) e horario
+- Uma tag Cafeteria ou Delivery
+- Os itens do pedido, com observacoes do cliente (se tiver)
+
+Avancar um pedido:
+- Clique no botao na parte de baixo do card (o texto muda conforme a etapa: "Iniciar preparo" -> "Marcar como pronto" -> "Marcar como entregue")
+- Ao clicar em "Iniciar preparo", vai abrir uma janela pedindo pra escolher qual funcionario vai preparar aquele pedido. Escolha o nome e confirme. (Se ainda nao tiver funcionario cadastrado, veja a secao Configuracoes > Funcionarios mais abaixo)
+- Depois de escolhido, o nome do funcionario aparece no card ("Preparo: Fulano")
+
+Voltar um pedido:
+- Use o botao "<" ao lado do botao principal, se precisar corrigir uma etapa por engano
+- Se voltar de "Em preparo" pra "Recebido", o funcionario selecionado e removido - se avancar de novo, vai pedir pra escolher outra vez
+
+
+2. CARDAPIO (GERENCIAR PRODUTOS)
+
+Menu lateral > Cardapio.
+
+Ver produtos:
+A tabela mostra todos os produtos cadastrados: nome, categoria, preco, estoque, em quais canais aparecem (Cafeteria/Delivery) e se estao ativos.
+Use a barra de busca (por nome) e o filtro de categoria pra encontrar produtos mais rapido.
+
+Cadastrar um produto novo:
+1. Clique em "+ Novo produto"
+2. Preencha nome, descricao, preco, estoque
+3. Escolha a categoria (se a categoria que voce precisa nao existir ainda, cadastre primeiro em Configuracoes > Categorias)
+4. Marque em quais canais o produto vai aparecer: Cafeteria, Delivery, ou os dois (precisa marcar pelo menos um)
+5. Marque "Ativo no cardapio" se quiser que ele ja apareca pros clientes
+6. Clique em Salvar
+
+Editar ou excluir:
+- Clique em Editar na linha do produto pra mudar qualquer informacao (inclusive ajustar o estoque manualmente)
+- Clique em Excluir pra remover o produto - essa acao nao pode ser desfeita, o sistema pede confirmacao antes
+
+Obs sobre estoque: quando um pedido avanca de "Recebido" pra "Em preparo", o sistema desconta automaticamente do estoque a quantidade de cada item. Se o pedido voltar, o estoque e devolvido.
+
+
+3. DASHBOARD
+
+Menu lateral > Dashboard. Mostra um resumo do dia:
+
+- Pedidos hoje, Receita hoje, Ticket medio, Tempo medio de preparo
+- Pedidos por status agora (quantos em cada coluna do kanban)
+- Produtos mais vendidos hoje (top 5)
+- Estoque baixo - alerta de produtos com pouca quantidade sobrando (5 unidades ou menos)
+
+Os numeros sao so do dia atual, e atualizam sozinhos conforme os pedidos mudam.
+
+
+4. HISTORICO
+
+Menu lateral > Historico. Lista os ultimos pedidos que ja foram entregues, com numero do pedido, mesa/cliente, itens, total e horario da entrega.
+
+
+5. CONFIGURACOES
+
+Menu lateral > Configuracoes. Tem um menu a esquerda com 5 abas:
+
+Perfil
+Trocar seu nome de exibicao (o email nao pode ser alterado).
+
+Loja
+Informacoes da sua loja, usadas pelo site de cardapio do cliente:
+- Nome da loja
+- Slug: identificador usado na URL do cardapio (gerado automatico a partir do nome, mas pode editar)
+- WhatsApp: numero (com DDI + DDD, so numeros) pra onde o cliente e direcionado ao final do pedido
+
+Senha
+Trocar sua senha de acesso. Deixe os campos em branco se nao quiser mudar.
+
+Categorias
+Cadastre aqui as categorias que vao aparecer na hora de criar um produto no Cardapio (ex: "Bolos", "Salgados", "Bebidas"). Pode criar, editar o nome ou excluir.
+
+Funcionarios
+Cadastre aqui quem pode ser escolhido como responsavel pelo preparo de um pedido. Pode:
+- Adicionar um novo funcionario (so o nome)
+- Desativar um funcionario que nao trabalha mais (ele some da lista de escolha, mas o historico continua registrado)
+- Editar o nome ou excluir
+
+
+DUVIDAS COMUNS
+
+Um pedido chegou sem aparecer certo / com aviso amarelo "Sem dono"?
+Isso pode acontecer enquanto o site do cardapio ainda esta sendo ajustado do lado tecnico. Ao clicar em avancar o status desse pedido, ele passa a pertencer normalmente a sua loja - nao e motivo pra preocupacao, e so clicar e seguir o fluxo normal.
+
+Esqueci a senha, e agora?
+Fale com quem administra o sistema - a recuperacao de senha por email ainda nao esta configurada nesta versao.

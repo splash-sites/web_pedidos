@@ -16,24 +16,42 @@ function slugify(texto) {
 const SECOES = [
   { id: 'perfil', label: 'Perfil' },
   { id: 'loja', label: 'Loja' },
-  { id: 'senha', label: 'Senha' },
   { id: 'categorias', label: 'Categorias' },
   { id: 'funcionarios', label: 'Funcionários' },
 ]
 
 function PerfilSection() {
-  const { session, updateNome } = useAuthContext()
+  const { session, updateNome, updateSenha } = useAuthContext()
   const [nome, setNome] = useState(session?.user?.user_metadata?.nome ?? '')
+  const [senha, setSenha] = useState('')
+  const [confirmar, setConfirmar] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [msg, setMsg] = useState(null)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setSalvando(true)
     setMsg(null)
+
+    if (senha || confirmar) {
+      if (senha.length < 6) {
+        setMsg({ tipo: 'erro', texto: 'Senha precisa ter pelo menos 6 caracteres.' })
+        return
+      }
+      if (senha !== confirmar) {
+        setMsg({ tipo: 'erro', texto: 'Senhas não conferem.' })
+        return
+      }
+    }
+
+    setSalvando(true)
     try {
       await updateNome(nome.trim())
-      setMsg({ tipo: 'ok', texto: 'Nome atualizado.' })
+      if (senha) {
+        await updateSenha(senha)
+        setSenha('')
+        setConfirmar('')
+      }
+      setMsg({ tipo: 'ok', texto: 'Perfil atualizado.' })
     } catch (err) {
       setMsg({ tipo: 'erro', texto: err.message })
     } finally {
@@ -46,6 +64,14 @@ function PerfilSection() {
       <h3 className="font-semibold text-brown-darker">Perfil</h3>
       <form onSubmit={handleSubmit} className="mt-4 flex max-w-sm flex-col gap-3">
         <label className="text-sm text-brown-dark">
+          Nome
+          <input
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
+          />
+        </label>
+        <label className="text-sm text-brown-dark">
           Email
           <input
             disabled
@@ -54,13 +80,28 @@ function PerfilSection() {
           />
         </label>
         <label className="text-sm text-brown-dark">
-          Nome
+          Nova senha
           <input
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            type="password"
+            minLength={6}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
             className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
           />
         </label>
+        <label className="text-sm text-brown-dark">
+          Confirmar nova senha
+          <input
+            type="password"
+            minLength={6}
+            value={confirmar}
+            onChange={(e) => setConfirmar(e.target.value)}
+            className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
+          />
+        </label>
+        <span className="-mt-2 text-xs text-brown-dark/50">
+          Deixe os campos de senha em branco pra manter a senha atual.
+        </span>
         {msg && (
           <p className={`text-sm ${msg.tipo === 'ok' ? 'text-green-700' : 'text-red-600'}`}>
             {msg.texto}
@@ -78,12 +119,13 @@ function PerfilSection() {
   )
 }
 
+const CARDAPIO_BASE_URL = 'https://cardapio-app-teal.vercel.app/loja/'
+
 function LojaSection() {
   const { loja, loading, error: erroCarregar, salvarLoja } = useLoja()
   const [nome, setNome] = useState('')
   const [slug, setSlug] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
-  const [slugEditadoManualmente, setSlugEditadoManualmente] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const [msg, setMsg] = useState(null)
 
@@ -92,19 +134,10 @@ function LojaSection() {
       setNome(loja.nome)
       setSlug(loja.slug)
       setWhatsapp(loja.whatsapp ?? '')
-      setSlugEditadoManualmente(true)
     }
   }, [loja])
 
-  function handleNomeChange(valor) {
-    setNome(valor)
-    if (!slugEditadoManualmente) {
-      setSlug(slugify(valor))
-    }
-  }
-
   function handleSlugChange(valor) {
-    setSlugEditadoManualmente(true)
     setSlug(slugify(valor))
   }
 
@@ -134,8 +167,7 @@ function LojaSection() {
     <div>
       <h3 className="font-semibold text-brown-darker">Loja</h3>
       <p className="mt-1 max-w-sm text-sm text-brown-dark/60">
-        Identifica sua loja pro cardapio-app (URL do cardápio usa esse slug pra
-        saber de qual loja mostrar produtos e receber pedidos).
+        Informações da sua loja usadas pelo cardápio online.
       </p>
 
       {loading ? (
@@ -146,19 +178,34 @@ function LojaSection() {
             Nome da loja
             <input
               value={nome}
-              onChange={(e) => handleNomeChange(e.target.value)}
+              onChange={(e) => setNome(e.target.value)}
               placeholder="Cacau Show - Centro"
               className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
             />
           </label>
           <label className="text-sm text-brown-dark">
-            Slug (usado na URL do cardápio)
+            Identificador do cardápio
             <input
               value={slug}
               onChange={(e) => handleSlugChange(e.target.value)}
               placeholder="cacau-show-centro"
               className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm font-mono focus:border-accent focus:outline-none"
             />
+            <span className="mt-1 block text-xs text-brown-dark/50">
+              Esse texto vira o endereço do seu cardápio online, o link que
+              você compartilha com os clientes. Use só letras, números e
+              hífen — sem espaços ou acentos.
+            </span>
+            {slug && (
+              <a
+                href={`${CARDAPIO_BASE_URL}${slug}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-2 inline-block rounded-md border border-brown-dark/20 px-3 py-1.5 text-xs font-medium text-brown-dark hover:bg-cream"
+              >
+                Ver cardápio ↗
+              </a>
+            )}
           </label>
           <label className="text-sm text-brown-dark">
             WhatsApp
@@ -188,78 +235,6 @@ function LojaSection() {
           </button>
         </form>
       )}
-    </div>
-  )
-}
-
-function SenhaSection() {
-  const { updateSenha } = useAuthContext()
-  const [senha, setSenha] = useState('')
-  const [confirmar, setConfirmar] = useState('')
-  const [salvando, setSalvando] = useState(false)
-  const [msg, setMsg] = useState(null)
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setMsg(null)
-    if (senha.length < 6) {
-      setMsg({ tipo: 'erro', texto: 'Senha precisa ter pelo menos 6 caracteres.' })
-      return
-    }
-    if (senha !== confirmar) {
-      setMsg({ tipo: 'erro', texto: 'Senhas não conferem.' })
-      return
-    }
-    setSalvando(true)
-    try {
-      await updateSenha(senha)
-      setSenha('')
-      setConfirmar('')
-      setMsg({ tipo: 'ok', texto: 'Senha atualizada.' })
-    } catch (err) {
-      setMsg({ tipo: 'erro', texto: err.message })
-    } finally {
-      setSalvando(false)
-    }
-  }
-
-  return (
-    <div>
-      <h3 className="font-semibold text-brown-darker">Senha</h3>
-      <form onSubmit={handleSubmit} className="mt-4 flex max-w-sm flex-col gap-3">
-        <label className="text-sm text-brown-dark">
-          Nova senha
-          <input
-            type="password"
-            minLength={6}
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
-          />
-        </label>
-        <label className="text-sm text-brown-dark">
-          Confirmar nova senha
-          <input
-            type="password"
-            minLength={6}
-            value={confirmar}
-            onChange={(e) => setConfirmar(e.target.value)}
-            className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
-          />
-        </label>
-        {msg && (
-          <p className={`text-sm ${msg.tipo === 'ok' ? 'text-green-700' : 'text-red-600'}`}>
-            {msg.texto}
-          </p>
-        )}
-        <button
-          type="submit"
-          disabled={salvando}
-          className="self-start rounded-md bg-brown-dark px-4 py-2 text-sm font-medium text-cream hover:bg-brown-darker disabled:opacity-60"
-        >
-          {salvando ? 'Salvando...' : 'Salvar'}
-        </button>
-      </form>
     </div>
   )
 }
@@ -556,7 +531,6 @@ function FuncionariosSection() {
 const CONTEUDO = {
   perfil: PerfilSection,
   loja: LojaSection,
-  senha: SenhaSection,
   categorias: CategoriasSection,
   funcionarios: FuncionariosSection,
 }

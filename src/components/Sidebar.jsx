@@ -1,33 +1,20 @@
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useAuthContext } from '../context/AuthContext'
+import { NavLink } from 'react-router-dom'
 
 const navItems = [
   { to: '/pedidos', label: 'Pedidos' },
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/cardapio', label: 'Cardápio' },
   { to: '/historico', label: 'Histórico' },
-  { to: '/configuracoes', label: 'Configurações' },
 ]
 
+const navLinkClass = ({ isActive }) =>
+  `rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
+    isActive
+      ? 'bg-accent text-sidebar'
+      : 'text-cream/80 hover:bg-sidebar-hover'
+  }`
+
 export default function Sidebar() {
-  const { session, signOut } = useAuthContext()
-  const navigate = useNavigate()
-
-  const nome = session?.user?.user_metadata?.nome
-  const email = session?.user?.email
-
-  async function handleSair() {
-    await signOut()
-    navigate('/login', { replace: true })
-  }
-
-  const navLinkClass = ({ isActive }) =>
-    `rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
-      isActive
-        ? 'bg-accent text-sidebar'
-        : 'text-cream/80 hover:bg-sidebar-hover'
-    }`
-
   return (
     <aside className="flex h-screen w-60 shrink-0 flex-col justify-between bg-sidebar px-5 py-6 text-cream">
       <div>
@@ -43,18 +30,20 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="border-t border-cream/10 pt-6">
-        <p className="truncate text-sm font-medium text-cream/90">
-          {nome || email}
-        </p>
-        {nome && <p className="truncate text-xs text-cream/50">{email}</p>}
-
-        <button
-          onClick={handleSair}
-          className="mt-3 text-left text-sm text-cream/70 hover:text-cream"
-        >
-          Sair
-        </button>
+      <div className="flex flex-col border-t border-cream/10 pt-3">
+        <NavLink to="/configuracoes" className={navLinkClass}>
+          <span className="flex items-center gap-2">
+            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+              <circle cx="10" cy="10" r="2.5" strokeWidth="1.5" />
+              <path
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                d="M10 2.5v1.4M10 16.1v1.4M17.5 10h-1.4M3.9 10H2.5M15.1 4.9l-1 1M5.9 14.1l-1 1M15.1 15.1l-1-1M5.9 5.9l-1-1"
+              />
+            </svg>
+            Configurações
+          </span>
+        </NavLink>
       </div>
     </aside>
   )
