@@ -72,17 +72,27 @@ export default function Cardapio() {
           onChange={(e) => setBusca(e.target.value)}
           className="w-64 rounded-md border border-brown-dark/20 bg-white px-3 py-2 text-sm focus:border-accent focus:outline-none"
         />
-        <select
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
-          className="rounded-md border border-brown-dark/20 bg-white px-3 py-2 text-sm focus:border-accent focus:outline-none"
-        >
-          {categorias.map((c) => (
-            <option key={c} value={c}>
-              {c === 'todas' ? 'Todas as categorias' : c}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className="appearance-none rounded-md border border-brown-dark/20 bg-white py-2 pl-3 pr-8 text-sm text-brown-dark focus:border-accent focus:outline-none"
+          >
+            {categorias.map((c) => (
+              <option key={c} value={c}>
+                {c === 'todas' ? 'Todas as categorias' : c}
+              </option>
+            ))}
+          </select>
+          <svg
+            className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-brown-dark/50"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path d="M6 8l4 4 4-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
       </div>
 
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
@@ -94,7 +104,7 @@ export default function Cardapio() {
           Nenhum produto encontrado.
         </p>
       ) : (
-        <div className="mt-4 overflow-hidden rounded-lg border border-brown-dark/10 bg-white">
+        <div className="mt-4 overflow-hidden rounded-lg border border-brown-dark/30 bg-white">
           <table className="w-full text-left text-sm">
             <thead className="bg-cream text-brown-dark">
               <tr>

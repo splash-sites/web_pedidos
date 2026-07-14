@@ -82,6 +82,7 @@ function LojaSection() {
   const { loja, loading, error: erroCarregar, salvarLoja } = useLoja()
   const [nome, setNome] = useState('')
   const [slug, setSlug] = useState('')
+  const [whatsapp, setWhatsapp] = useState('')
   const [slugEditadoManualmente, setSlugEditadoManualmente] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const [msg, setMsg] = useState(null)
@@ -90,6 +91,7 @@ function LojaSection() {
     if (loja) {
       setNome(loja.nome)
       setSlug(loja.slug)
+      setWhatsapp(loja.whatsapp ?? '')
       setSlugEditadoManualmente(true)
     }
   }, [loja])
@@ -115,7 +117,11 @@ function LojaSection() {
     setSalvando(true)
     setMsg(null)
     try {
-      await salvarLoja({ nome: nome.trim(), slug: slug.trim() })
+      await salvarLoja({
+        nome: nome.trim(),
+        slug: slug.trim(),
+        whatsapp: whatsapp.replace(/\D/g, '') || null,
+      })
       setMsg({ tipo: 'ok', texto: 'Loja salva.' })
     } catch (err) {
       setMsg({ tipo: 'erro', texto: err.message })
@@ -153,6 +159,19 @@ function LojaSection() {
               placeholder="cacau-show-centro"
               className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm font-mono focus:border-accent focus:outline-none"
             />
+          </label>
+          <label className="text-sm text-brown-dark">
+            WhatsApp
+            <input
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+              placeholder="5511999999999"
+              className="mt-1 w-full rounded-md border border-brown-dark/20 px-3 py-2 text-sm focus:border-accent focus:outline-none"
+            />
+            <span className="mt-1 block text-xs text-brown-dark/50">
+              Com DDI + DDD, só números (ex: 55 + DDD + número). Pro cliente ser
+              redirecionado no final do pedido.
+            </span>
           </label>
           {erroCarregar && <p className="text-sm text-red-600">{erroCarregar}</p>}
           {msg && (
@@ -327,7 +346,7 @@ function CategoriasSection() {
           Nenhuma categoria cadastrada.
         </p>
       ) : (
-        <div className="mt-4 max-w-sm overflow-hidden rounded-lg border border-brown-dark/10 bg-white">
+        <div className="mt-4 max-w-sm overflow-hidden rounded-lg border border-brown-dark/10 bg-cream">
           {categorias.map((c) => (
             <div
               key={c.id}
@@ -473,7 +492,7 @@ function FuncionariosSection() {
           Nenhum funcionário cadastrado.
         </p>
       ) : (
-        <div className="mt-4 max-w-sm overflow-hidden rounded-lg border border-brown-dark/10 bg-white">
+        <div className="mt-4 max-w-sm overflow-hidden rounded-lg border border-brown-dark/10 bg-cream">
           {funcionarios.map((f) => (
             <div
               key={f.id}

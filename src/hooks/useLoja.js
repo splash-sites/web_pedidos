@@ -30,10 +30,10 @@ export function useLoja() {
     fetchLoja()
   }, [fetchLoja])
 
-  async function salvarLoja({ slug, nome }) {
+  async function salvarLoja({ slug, nome, whatsapp }) {
     const { data, error } = await supabase
       .from('lojas')
-      .upsert({ dono_id: donoId, slug, nome }, { onConflict: 'dono_id' })
+      .upsert({ dono_id: donoId, slug, nome, whatsapp }, { onConflict: 'dono_id' })
       .select()
       .single()
 
