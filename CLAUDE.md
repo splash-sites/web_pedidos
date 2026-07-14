@@ -127,17 +127,17 @@ Se quiser que o kanban reaja também a itens adicionados/editados depois da cria
 
 Hoje isso não é crítico porque o `cardapio-app` cria pedido + itens juntos — o INSERT em `pedidos` já dispara o refetch e traz os itens junto.
 
-## Feature: Cardápio (CRUD de produtos) — próxima na fila
+## Feature: Cardápio (CRUD de produtos) — implementada
 
-Página de gestão de produtos do cardápio. Usa a tabela `produtos` (schema já definido acima).
+Página de gestão de produtos do cardápio (`src/pages/Cardapio.jsx`). Usa a tabela `produtos`.
 
-- [ ] Listagem de produtos (nome, categoria, preço, estoque, status ativo/inativo)
-- [ ] Criar produto (nome, descrição, preço, categoria, imagem, estoque inicial)
-- [ ] Editar produto
-- [ ] Excluir produto (ou soft-delete via `ativo = false`, a definir)
-- [ ] Controle de estoque (ajuste manual de quantidade)
-- [ ] Upload/URL de imagem do produto
-- [ ] Filtro por categoria e busca por nome
+- [x] Listagem de produtos (nome, categoria, preço, estoque, canais, status ativo/inativo)
+- [x] Criar produto (nome, descrição, preço, categoria, imagem, estoque inicial, canais)
+- [x] Editar produto
+- [x] Excluir produto (hard delete, com confirmação — não é soft-delete, `ativo=false` é um checkbox separado no form)
+- [x] Controle de estoque — via campo no form de edição (não tem botão dedicado de "+1/-1", é edição direta do número)
+- [ ] Upload de imagem — **não implementado**, só campo de URL (`imagem_url` texto). Se precisar upload de arquivo de verdade, precisa de Supabase Storage.
+- [x] Filtro por categoria e busca por nome
 
 ## Feature: Dashboard — v1 implementada
 
